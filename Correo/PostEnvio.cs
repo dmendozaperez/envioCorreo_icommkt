@@ -5,12 +5,14 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Net;
+//using System.Net.Http;
+//using System.Net.Http.Headers;
 using System.Text;
 //using System.Web.Script.Serialization;
 
 //namespace Correo
 //{
-    public class PostEnvio
+public class PostEnvio
     {
         [Microsoft.SqlServer.Server.SqlFunction()]
     [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Assert, Unrestricted = true)]
@@ -58,33 +60,55 @@ using System.Text;
             }
             return gRequest;
         }
-        public static string  convert_object_jason(Ent_Swagger data)
+   
+    public static string convert_object_jason2(Ent_Swagger data)
+    {
+        string jason_query = "";
+        try
         {
-            string jason_query = "";
-            try
-            {
-                if (data!=null)
-                   jason_query = "{\"From\":" + "\"" + data.From.ToString() + "\"" + "," +
-                                "\"To\":" + "\"" + data.To.ToString() + "\"" + "," +
-                                "\"Subject\":" + "\"" + data.Subject.ToString() + "\"" + "," +
-                                "\"HtmlBody\":" + "\"" + data.HtmlBody.ToString() + "\"" + "," +
-                                "\"TextBody\":" + "\"" + data.TextBody.ToString() + "\"" + "}";
+            if (data != null)
+                jason_query = "{\"from\":" + "\"" + data.From.ToString() + "\"" + "," +
+                            "\"to\":" + "\"" + data.To.ToString() + "\"" + "," +
+                            "\"subject\":" + "\"" + data.Subject.ToString() + "\"" + "," +
+                            "\"html\":" + "\"" + data.HtmlBody.ToString() + "\"" + "," +
+                            "\"text\":" + "\"" + data.TextBody.ToString() + "\"" + "}";
 
-            }
-            catch (Exception exc)
-            {
+        }
+        catch (Exception exc)
+        {
 
-                throw exc;
-            }
-            return jason_query;
-        }    
+            throw exc;
+        }
+        return jason_query;
+    }
+
+    public static string  convert_object_jason(Ent_Swagger data)
+    {
+        string jason_query = "";
+        try
+        {
+            if (data!=null)
+                jason_query = "{\"From\":" + "\"" + data.From.ToString() + "\"" + "," +
+                            "\"To\":" + "\"" + data.To.ToString() + "\"" + "," +
+                            "\"Subject\":" + "\"" + data.Subject.ToString() + "\"" + "," +
+                            "\"HtmlBody\":" + "\"" + data.HtmlBody.ToString() + "\"" + "," +
+                            "\"TextBody\":" + "\"" + data.TextBody.ToString() + "\"" + "}";
+
+        }
+        catch (Exception exc)
+        {
+
+            throw exc;
+        }
+        return jason_query;
+    }    
     }
     public class Swagger
     {
         public static string sendEmail(string value)
         {
             string url = "https://api.trx.icommarketing.com/email";
-            string apiKey = "e1880171-6bfc-4f66-b008-d5542c31a9e4";
+            string apiKey = "d05d32c5-4703-465b-9b84-f0e43422263b";//"e1880171-6bfc-4f66-b008-d5542c31a9e4";
 
             var request = HttpWebRequest.Create(url);
             var byteData = Encoding.UTF8.GetBytes(value);
@@ -93,6 +117,42 @@ using System.Text;
             request.ContentType = "application/json";
             request.Headers.Add("X-Trx-Api-Key", apiKey);
             request.Method = "POST";
+            //request.
+            try
+            {
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(byteData, 0, byteData.Length);
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+                return responseString;
+
+
+            }
+            catch (WebException e)
+            {
+                return e.Message;
+            }
+        }
+
+        public static string sendEmail2(string value)
+        {
+            string url = "https://9r5pjy.api.infobip.com/email/2/send";
+            string apiKey = "U2VydmljaW9CYXRhOiQlNTNydjFjMTBCNHQ0JSQ=";
+
+            var request = HttpWebRequest.Create(url);
+            var byteData = Encoding.UTF8.GetBytes(value);
+
+             request.Headers.Add("Authorization", "Basic " + apiKey);
+            // request.Headers.Add
+            //HttpContent
+
+        //request.Headers["Authorization"] = "Bearer X-Trx-Api-Key";
+           request.ContentType = "application/json";
+        //request.Headers.Add("X-Trx-Api-Key", apiKey);
+             request.Method = "POST";
 
             try
             {

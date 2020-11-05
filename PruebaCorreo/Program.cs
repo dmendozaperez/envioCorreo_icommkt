@@ -32,6 +32,8 @@ namespace PruebaCorreo
            // html = html.Replace("bataclubcodigobarra", @"http://posperu.bgr.pe/ws_ec/barra/201906/45AA7EA569EC42F.png");
 
             PostEnvio.envio_correo("bataclub@bata.com.pe", "david_mendozap@hotmail.com", "Actualización de registro Bata Club", "", "Que tal");
+
+           // PostEnvio.envio_correo2("bataclub@mk.batamailing.pe", "david.mendoza@bata.com", "Actualización de registro Bata Club", "", "Que tal");
         }
     }
 }
